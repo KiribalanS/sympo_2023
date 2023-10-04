@@ -243,7 +243,7 @@ class _JoinCodeState extends State<JoinCode> {
                               child: const Padding(
                                 padding: EdgeInsets.all(19.0),
                                 child: Text(
-                                  "No Rooms found!\nClose",
+                                  "No Rooms found!\nTap to Close",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.deepPurple,
