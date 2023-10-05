@@ -53,117 +53,109 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool _isLoading = false;
   final teamName = TextEditingController();
   final form = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 5,
-                color: Colors.deepPurple,
+      body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image(
+                height: MediaQuery.of(context).size.height * 0.5,
+                width: MediaQuery.of(context).size.width * 0.5,
+                image: const AssetImage("assets/nv2.png"),
               ),
-            )
-          : SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: SizedBox(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image(
-                      height: MediaQuery.of(context).size.height * 0.5,
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      image: const AssetImage("assets/nv2.png"),
-                    ),
-                    Center(
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: Form(
-                          key: form,
-                          child: TextFormField(
-                            controller: teamName,
-                            validator: (value) {
-                              if (value == null || value == "") {
-                                return "Please enter a Team Name";
-                              } else {
-                                return null;
-                              }
-                            },
-                            decoration: InputDecoration(
-                              hintText: "Enter Team Name",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
+              Center(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Form(
+                    key: form,
+                    child: TextFormField(
+                      controller: teamName,
+                      validator: (value) {
+                        if (value == null || value == "") {
+                          return "Please enter a Team Name";
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Enter Team Name",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 30.0),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          elevation: 10,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: () {
-                          if (form.currentState!.validate()) {
-                            // setState(() {
-                            //   _isLoading = true;
-                            // });
-                            // FirebaseDatabase.instance
-                            //     .ref("paticipants")
-                            //     .push()
-                            //     .set(teamName.text.trim())
-                            //     .then((value) {
-                            //   setState(() {
-                            //     _isLoading = false;
-                            //   });
-                            // });
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    Buzzer(teamName: teamName.text),
-                              ),
-                            );
-                          }
-                        },
-                        child: const SizedBox(
-                          height: 50,
-                          width: 150,
-                          child: Text(
-                            "Next",
-                            style: TextStyle(
-                              fontSize: 30,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 100,
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Copyright ©\t"),
-                        TextButton(
-                          onPressed: _launchUrl,
-                          child: Text("Nediveil Technologies"),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: () {
+                    if (form.currentState!.validate()) {
+                      // setState(() {
+                      //   _isLoading = true;
+                      // });
+                      // FirebaseDatabase.instance
+                      //     .ref("paticipants")
+                      //     .push()
+                      //     .set(teamName.text.trim())
+                      //     .then((value) {
+                      //   setState(() {
+                      //     _isLoading = false;
+                      //   });
+                      // });
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Buzzer(teamName: teamName.text),
+                        ),
+                      );
+                    }
+                  },
+                  child: const SizedBox(
+                    height: 50,
+                    width: 150,
+                    child: Text(
+                      "Next",
+                      style: TextStyle(
+                        fontSize: 30,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 100,
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Copyright ©\t"),
+                  TextButton(
+                    onPressed: _launchUrl,
+                    child: Text("Nediveil Technologies"),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -189,116 +181,119 @@ class _JoinCodeState extends State<JoinCode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image(
-              height: MediaQuery.of(context).size.height * 0.5,
-              width: MediaQuery.of(context).size.width * 0.5,
-              image: const AssetImage("assets/nv2.png"),
-            ),
-            Center(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Form(
-                  key: join,
-                  child: TextFormField(
-                    controller: code,
-                    validator: (value) {
-                      if (value == null || value == "") {
-                        return "Please enter a code";
-                      } else {
-                        return null;
-                      }
-                    },
-                    decoration: InputDecoration(
-                      hintText: "Enter Code",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+        physics: const ClampingScrollPhysics(),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image(
+                height: MediaQuery.of(context).size.height * 0.5,
+                width: MediaQuery.of(context).size.width * 0.5,
+                image: const AssetImage("assets/nv2.png"),
+              ),
+              Center(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Form(
+                    key: join,
+                    child: TextFormField(
+                      controller: code,
+                      validator: (value) {
+                        if (value == null || value == "") {
+                          return "Please enter a code";
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Enter Code",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  elevation: 10,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                ),
-                onPressed: () {
-                  if (join.currentState!.validate()) {
-                    if (code.text == "cse") {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MyHomePage(
-                              title: 'NediVeil Technologies Buzzer'),
-                        ),
-                      );
-                    } else {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return Card(
-                            child: Center(
-                              child: ElevatedButton(
-                                child: const Padding(
-                                  padding: EdgeInsets.all(19.0),
-                                  child: Text(
-                                    "No Rooms found!\nTap to Close",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.deepPurple,
-                                      fontSize: 25,
+                  onPressed: () {
+                    if (join.currentState!.validate()) {
+                      if (code.text == "cse") {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MyHomePage(
+                                title: 'NediVeil Technologies Buzzer'),
+                          ),
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Card(
+                              child: Center(
+                                child: ElevatedButton(
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(19.0),
+                                    child: Text(
+                                      "No Rooms found!\nTap to Close",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.deepPurple,
+                                        fontSize: 25,
+                                      ),
                                     ),
                                   ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
                                 ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
                               ),
-                            ),
-                          );
-                        },
-                      );
+                            );
+                          },
+                        );
+                      }
                     }
-                  }
-                },
-                child: const SizedBox(
-                  height: 50,
-                  width: 150,
-                  child: Text(
-                    "Join",
-                    style: TextStyle(
-                      fontSize: 30,
+                  },
+                  child: const SizedBox(
+                    height: 50,
+                    width: 150,
+                    child: Text(
+                      "Join",
+                      style: TextStyle(
+                        fontSize: 30,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 100,
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Copyright ©\t"),
-                TextButton(
-                  onPressed: _launchUrl,
-                  child: Text("Nediveil Technologies"),
-                ),
-              ],
-            ),
-          ],
+              const SizedBox(
+                height: 100,
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Copyright ©\t"),
+                  TextButton(
+                    onPressed: _launchUrl,
+                    child: Text("Nediveil Technologies"),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
