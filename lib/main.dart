@@ -58,9 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
@@ -77,6 +75,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Form(
                     key: form,
                     child: TextFormField(
+                      onFieldSubmitted: (value) {
+                        if (form.currentState!.validate()) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  Buzzer(teamName: teamName.text),
+                            ),
+                          );
+                        }
+                      },
                       controller: teamName,
                       validator: (value) {
                         if (value == null || value == "") {
@@ -181,9 +190,7 @@ class _JoinCodeState extends State<JoinCode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
@@ -200,6 +207,45 @@ class _JoinCodeState extends State<JoinCode> {
                   child: Form(
                     key: join,
                     child: TextFormField(
+                      onFieldSubmitted: (_) {
+                        if (join.currentState!.validate()) {
+                          if (code.text == "cse") {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const MyHomePage(
+                                    title: 'NediVeil Technologies Buzzer'),
+                              ),
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Card(
+                                  child: Center(
+                                    child: ElevatedButton(
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(19.0),
+                                        child: Text(
+                                          "No Rooms found!\nTap to Close",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.deepPurple,
+                                            fontSize: 25,
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                        }
+                      },
                       controller: code,
                       validator: (value) {
                         if (value == null || value == "") {

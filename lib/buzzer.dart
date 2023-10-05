@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -12,6 +12,14 @@ class Buzzer extends StatefulWidget {
 }
 
 class _BuzzerState extends State<Buzzer> {
+  Future<bool> isNameUsed(String name, DatabaseReference _buzzerRef) async {
+    final nameQuery = _buzzerRef.orderByChild("team_name").equalTo(name);
+
+    final DatabaseEvent snapshot = await nameQuery.once();
+
+    return snapshot.snapshot.exists;
+  }
+
   bool _isClicked = false;
   @override
   Widget build(BuildContext context) {
@@ -30,41 +38,56 @@ class _BuzzerState extends State<Buzzer> {
               borderRadius: BorderRadius.circular(360),
             ),
           ),
-          onPressed: () {
+          onPressed: () async {
             setState(() {
               _isClicked = true;
             });
-            FirebaseDatabase.instance.ref("buzzer").push().set({
-              "team_name": widget.teamName,
-              "time": DateTime.now().toString(),
-            }).then(
-              (value) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const BuzzerBottomSheet(),
-                  ),
-                ).then((value) {
-                  setState(
-                    () {
-                      _isClicked = false;
-                    },
-                  );
-                });
-                // showModalBottomSheet(
-                //   context: context,
-                //   builder: (context) {
-                //     return const BuzzerBottomSheet();
-                //   },
-                // ).then(
-                //   (value) => setState(
-                //     () {
-                //       _isClicked = false;
-                //     },
-                //   ),
-                // );
-              },
-            );
+
+            final database = FirebaseDatabase.instance;
+            final buzzerRef = database.ref("buzzer");
+
+            // Check if the name "hi" is already used.
+            final bool isUsed = await isNameUsed(widget.teamName, buzzerRef);
+
+            if (isUsed) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Wait for next Question"),
+                ),
+              );
+            } else {
+              FirebaseDatabase.instance.ref("buzzer").push().set({
+                "team_name": widget.teamName,
+                "time": DateTime.now().toString(),
+              }).then(
+                (value) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const BuzzerBottomSheet(),
+                    ),
+                  ).then((value) {
+                    setState(
+                      () {
+                        _isClicked = false;
+                      },
+                    );
+                  });
+                  // showModalBottomSheet(
+                  //   context: context,
+                  //   builder: (context) {
+                  //     return const BuzzerBottomSheet();
+                  //   },
+                  // ).then(
+                  //   (value) => setState(
+                  //     () {
+                  //       _isClicked = false;
+                  //     },
+                  //   ),
+                  // );
+                },
+              );
+            }
           },
           child: Container(
             height: 300,
