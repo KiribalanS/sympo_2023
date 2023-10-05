@@ -28,6 +28,7 @@ class AdminBuzzerState extends State<AdminBuzzer> {
             "team_name": teamName,
             "time": time,
           });
+          buzzers.sort((map1, map2) => map1['time'].compareTo(map2['time']));
         });
       }
     });

@@ -114,7 +114,7 @@ Widget whiteText(data) {
   return Text(
     data,
     style: const TextStyle(
-      fontSize: 19,
+      fontSize: 12,
       color: Colors.white,
     ),
   );
@@ -124,7 +124,7 @@ Widget customText(content) {
   return Text(
     content,
     style: const TextStyle(
-      fontSize: 19,
+      fontSize: 15,
     ),
   );
 }
@@ -154,6 +154,7 @@ class BuzzerBottommSheetState extends State<BuzzerBottomSheet> {
             "team_name": teamName,
             "time": time,
           });
+          buzzers.sort((map1, map2) => map1['time'].compareTo(map2['time']));
         });
       }
     });
@@ -223,6 +224,85 @@ class CustomDrawer extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.6,
       child: Stack(
         children: [
+          SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 25.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: SizedBox(
+                        child: Image(
+                          height: MediaQuery.of(context).size.height * 0.25,
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          fit: BoxFit.fill,
+                          image: AssetImage("assets/nv.png"),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      "Our services",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                      ),
+                    ),
+                    whiteText("1. Web Development"),
+                    whiteText("2. App Development"),
+                    whiteText("3. Bussiness Analysis"),
+                    whiteText("4. 3D Designing"),
+                    whiteText("5. Search Engine optimization"),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Center(
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.white,
+                        ),
+                        onPressed: _launchUrl,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 19.0,
+                            vertical: 5,
+                          ),
+                          child: Text(
+                            "visit us",
+                            style: TextStyle(
+                              color: Colors.purple,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(child: SizedBox()),
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: 28.0,
+                          right: 10,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            whiteText("Copyright ©\t"),
+                            whiteText("Nediveil Technologies"),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
           Align(
             alignment: Alignment.topRight,
             child: IconButton(
@@ -230,65 +310,6 @@ class CustomDrawer extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
               },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image(
-                  image: AssetImage("assets/nv.png"),
-                ),
-                Text(
-                  "Our services",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                  ),
-                ),
-                whiteText("1. Web Development"),
-                whiteText("2. App Development"),
-                whiteText("3. Bussiness Analysis"),
-                whiteText("4. 3D Designing"),
-                whiteText("5. Search Engine optimization"),
-                SizedBox(
-                  height: 50,
-                ),
-                Center(
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.white,
-                    ),
-                    onPressed: _launchUrl,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 28.0,
-                        vertical: 10,
-                      ),
-                      child: Text(
-                        "visit us",
-                        style: TextStyle(
-                          color: Colors.purple,
-                          fontSize: 19,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(child: SizedBox()),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 28.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      whiteText("Copyright ©\t"),
-                      whiteText("Nediveil Technologies"),
-                    ],
-                  ),
-                ),
-              ],
             ),
           ),
         ],
