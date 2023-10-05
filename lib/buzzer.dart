@@ -12,8 +12,8 @@ class Buzzer extends StatefulWidget {
 }
 
 class _BuzzerState extends State<Buzzer> {
-  Future<bool> isNameUsed(String name, DatabaseReference _buzzerRef) async {
-    final nameQuery = _buzzerRef.orderByChild("team_name").equalTo(name);
+  Future<bool> isNameUsed(String name, DatabaseReference buzzerRef) async {
+    final nameQuery = buzzerRef.orderByChild("team_name").equalTo(name);
 
     final DatabaseEvent snapshot = await nameQuery.once();
 
@@ -144,10 +144,13 @@ Widget whiteText(data) {
 }
 
 Widget customText(content) {
-  return Text(
-    content,
-    style: const TextStyle(
-      fontSize: 15,
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+    child: Text(
+      content,
+      style: const TextStyle(
+        fontSize: 15,
+      ),
     ),
   );
 }
@@ -217,7 +220,7 @@ class BuzzerBottommSheetState extends State<BuzzerBottomSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     customText((index + 1).toString()),
-                    customText(buzzers[index]["team_name"]),
+                    Expanded(child: customText(buzzers[index]["team_name"])),
                     customText(buzzers[index]["time"].toString().substring(10)),
                   ],
                 ),

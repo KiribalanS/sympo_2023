@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       home: JoinCode(),
       initialRoute: "/",
       routes: {
-        "/admin": (context) => const AdminBuzzer(),
+        "/refresh": (context) => const AdminBuzzer(),
         "/part": (context) => const BuzzerBottomSheet(),
         '/buzzer': (context) => const Buzzer(teamName: "#thirutu_kutty")
       },
@@ -58,7 +58,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
@@ -190,7 +192,9 @@ class _JoinCodeState extends State<JoinCode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(

@@ -63,7 +63,10 @@ class AdminBuzzerState extends State<AdminBuzzer> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           customText((index + 1).toString()),
-                          customText(buzzers[index]["team_name"]),
+                          Expanded(
+                              child: Center(
+                                  child:
+                                      customText(buzzers[index]["team_name"]))),
                           customText(
                               buzzers[index]["time"].toString().substring(10)),
                         ],
@@ -106,10 +109,13 @@ class AdminBuzzerState extends State<AdminBuzzer> {
   }
 
   Widget customText(content) {
-    return Text(
-      content,
-      style: const TextStyle(
-        fontSize: 19,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Text(
+        content,
+        style: const TextStyle(
+          fontSize: 19,
+        ),
       ),
     );
   }
