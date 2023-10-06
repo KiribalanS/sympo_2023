@@ -1,7 +1,10 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:sympo_gova/add_score.dart';
 import 'package:sympo_gova/admin_buzzer.dart';
 import 'package:sympo_gova/buzzer.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:sympo_gova/score_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void main() async {
@@ -38,7 +41,9 @@ class MyApp extends StatelessWidget {
       routes: {
         "/refresh": (context) => const AdminBuzzer(),
         "/part": (context) => const BuzzerBottomSheet(),
-        '/buzzer': (context) => const Buzzer(teamName: "#thirutu_kutty")
+        '/buzzer': (context) => const Buzzer(teamName: "#thirutu_kutty"),
+        '/scorecard': (context) => const ScoreCard(),
+        '/as': (context) => const AddScore(),
       },
     );
   }
@@ -55,118 +60,129 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final teamName = TextEditingController();
   final form = GlobalKey<FormState>();
+
+  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image(
-                height: MediaQuery.of(context).size.height * 0.5,
-                width: MediaQuery.of(context).size.width * 0.5,
-                image: const AssetImage("assets/nv2.png"),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: Colors.deepPurple,
               ),
-              Center(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: Form(
-                    key: form,
-                    child: TextFormField(
-                      onFieldSubmitted: (value) {
-                        if (form.currentState!.validate()) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  Buzzer(teamName: teamName.text),
+            )
+          : SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image(
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      image: const AssetImage("assets/nv2.png"),
+                    ),
+                    Center(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Form(
+                          key: form,
+                          child: TextFormField(
+                            onFieldSubmitted: (value) {
+                              if (form.currentState!.validate()) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        Buzzer(teamName: teamName.text),
+                                  ),
+                                );
+                              }
+                            },
+                            controller: teamName,
+                            validator: (value) {
+                              if (value == null || value == "") {
+                                return "Please enter a Team Name";
+                              } else {
+                                return null;
+                              }
+                            },
+                            decoration: InputDecoration(
+                              hintText: "Enter Team Name",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
-                          );
-                        }
-                      },
-                      controller: teamName,
-                      validator: (value) {
-                        if (value == null || value == "") {
-                          return "Please enter a Team Name";
-                        } else {
-                          return null;
-                        }
-                      },
-                      decoration: InputDecoration(
-                        hintText: "Enter Team Name",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30.0),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 10,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onPressed: () {
-                    if (form.currentState!.validate()) {
-                      // setState(() {
-                      //   _isLoading = true;
-                      // });
-                      // FirebaseDatabase.instance
-                      //     .ref("paticipants")
-                      //     .push()
-                      //     .set(teamName.text.trim())
-                      //     .then((value) {
-                      //   setState(() {
-                      //     _isLoading = false;
-                      //   });
-                      // });
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Buzzer(teamName: teamName.text),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 10,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
-                      );
-                    }
-                  },
-                  child: const SizedBox(
-                    height: 50,
-                    width: 150,
-                    child: Text(
-                      "Next",
-                      style: TextStyle(
-                        fontSize: 30,
+                        onPressed: () {
+                          if (form.currentState!.validate()) {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            FirebaseDatabase.instance
+                                .ref("scorecard")
+                                .push()
+                                .set({
+                              "team_name": teamName.text,
+                              "score": 0,
+                            }).then((value) {
+                              setState(() {
+                                _isLoading = false;
+                              });
+                            });
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    Buzzer(teamName: teamName.text),
+                              ),
+                            );
+                          }
+                        },
+                        child: const SizedBox(
+                          height: 50,
+                          width: 150,
+                          child: Text(
+                            "Next",
+                            style: TextStyle(
+                              fontSize: 30,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                  ),
+                    const SizedBox(
+                      height: 100,
+                    ),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Copyright ©\t"),
+                        TextButton(
+                          onPressed: _launchUrl,
+                          child: Text("Nediveil Technologies"),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(
-                height: 100,
-              ),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Copyright ©\t"),
-                  TextButton(
-                    onPressed: _launchUrl,
-                    child: Text("Nediveil Technologies"),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }
@@ -194,7 +210,7 @@ class _JoinCodeState extends State<JoinCode> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(

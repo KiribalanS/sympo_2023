@@ -220,7 +220,9 @@ class BuzzerBottommSheetState extends State<BuzzerBottomSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     customText((index + 1).toString()),
-                    Expanded(child: customText(buzzers[index]["team_name"])),
+                    Expanded(
+                        child: Center(
+                            child: customText(buzzers[index]["team_name"]))),
                     customText(buzzers[index]["time"].toString().substring(10)),
                   ],
                 ),
