@@ -36,13 +36,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: JoinCode(),
+      home: const JoinCode(),
       initialRoute: "/",
       routes: {
         "/refresh": (context) => const AdminBuzzer(),
         "/part": (context) => const BuzzerBottomSheet(),
         '/buzzer': (context) => const Buzzer(teamName: "#thirutu_kutty"),
-        '/scorecard': (context) => const ScoreCard(),
+        '/score': (context) => const ScoreCard(),
         '/as': (context) => const AddScore(),
       },
     );
@@ -135,14 +135,10 @@ class _MyHomePageState extends State<MyHomePage> {
                             });
                             FirebaseDatabase.instance
                                 .ref("scorecard")
-                                .push()
+                                .child(teamName.text)
                                 .set({
                               "team_name": teamName.text,
                               "score": 0,
-                            }).then((value) {
-                              setState(() {
-                                _isLoading = false;
-                              });
                             });
                             Navigator.pushReplacement(
                               context,
@@ -151,6 +147,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                     Buzzer(teamName: teamName.text),
                               ),
                             );
+                            setState(() {
+                              _isLoading = false;
+                            });
                           }
                         },
                         child: const SizedBox(
@@ -195,7 +194,7 @@ Future<void> _launchUrl() async {
 }
 
 class JoinCode extends StatefulWidget {
-  JoinCode({super.key});
+  const JoinCode({super.key});
 
   @override
   State<JoinCode> createState() => _JoinCodeState();
